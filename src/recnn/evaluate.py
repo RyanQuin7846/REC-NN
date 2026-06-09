@@ -11,7 +11,13 @@ from .model import build_model
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Evaluate a REC-NN checkpoint.")
-    parser.add_argument("--data", type=Path, nargs="+", required=True)
+    parser.add_argument(
+        "--data",
+        type=Path,
+        nargs="+",
+        required=True,
+        help="One or more paper-format .npy files or directories.",
+    )
     parser.add_argument("--checkpoint", type=Path, required=True)
     parser.add_argument("--batch-size", type=int, default=16)
     return parser.parse_args()

@@ -23,7 +23,28 @@ def _load_array(path: PathLike) -> np.ndarray:
         array = array[None, ...]
     if array.ndim != 4 or array.shape[1] != 7:
         raise ValueError(f"{path}: expected a paper-format array shaped (N, 7, H, W).")
+    if not np.isfinite(array).all():
+        raise ValueError(f"{path}: data contains NaN or infinite values.")
     return array
+
+
+def resolve_data_files(paths: Union[PathLike, Sequence[PathLike]]) -> list:
+    if isinstance(paths, (str, Path)):
+        paths = [paths]
+
+    files = []
+    for value in paths:
+        path = Path(value)
+        if path.is_dir():
+            files.extend(sorted(path.rglob("*.npy")))
+        elif path.is_file():
+            files.append(path)
+        else:
+            raise FileNotFoundError(f"Data path does not exist: {path}")
+
+    if not files:
+        raise ValueError("No .npy data files were found.")
+    return files
 
 
 class RECArrayDataset(Dataset):
@@ -34,10 +55,9 @@ class RECArrayDataset(Dataset):
     ):
         if mode not in {"rec", "epe"}:
             raise ValueError("mode must be 'rec' or 'epe'")
-        if isinstance(paths, (str, Path)):
-            paths = [paths]
 
-        array = np.concatenate([_load_array(path) for path in paths], axis=0)
+        self.files = resolve_data_files(paths)
+        array = np.concatenate([_load_array(path) for path in self.files], axis=0)
         base_features = array[:, :4]
         sigma_stab = array[:, SIGMA_STAB : SIGMA_STAB + 1]
 

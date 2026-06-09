@@ -43,6 +43,26 @@ class RECNNTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "paper-format"):
             RECArrayDataset(invalid)
 
+    def test_dataset_rejects_nonfinite_values(self):
+        invalid = self.data.copy()
+        invalid[0, 4, 0, 0] = np.nan
+        path = Path(self.temp_dir.name) / "nonfinite.npy"
+        np.save(path, invalid)
+        with self.assertRaisesRegex(ValueError, "NaN or infinite"):
+            RECArrayDataset(path)
+
+    def test_dataset_loads_directories_recursively(self):
+        nested = Path(self.temp_dir.name) / "DHH" / "Tumor"
+        nested.mkdir(parents=True)
+        np.save(nested / "2_mm.npy", self.data[:1])
+        np.save(nested / "4_mm.npy", self.data[1:])
+
+        dataset = RECArrayDataset(Path(self.temp_dir.name) / "DHH")
+        self.assertEqual(len(dataset), 2)
+        self.assertEqual(
+            [path.name for path in dataset.files], ["2_mm.npy", "4_mm.npy"]
+        )
+
     def test_model_forward(self):
         rec = RECArrayDataset(self.path, mode="rec")
         features, _, sigma_stab, sigma_gt = rec[0]

@@ -143,8 +143,12 @@ outliers can negatively affect numerical compensation and generalization.
 ```text
 REC-NN/
 |-- data/
-|   |-- README.md
-|   `-- samples/
+|   |-- AIG/
+|   |-- DHH/
+|   |   |-- Duke/
+|   |   |-- Ella/
+|   |   `-- Tumor/
+|   `-- README.md
 |-- docs/
 |   `-- images/
 |-- legacy/
@@ -182,10 +186,10 @@ Arrays have shape `(N, 7, H, W)` and use the paper-era channel layout:
 REC-NN receives channels 0-4. EPE-NN receives channels 0-3 and directly learns
 channel 6.
 
-The included AIG, Duke, Ella, and 4 mm tumor arrays each contain one float32
-sample selected from the newly recovered `REC-NN v2/data` files. They are
-provided for format inspection and code validation, not as the complete
-datasets used to produce the published results.
+The repository includes a compact supervised subset selected from the newly
+recovered `REC-NN v2/data` files: 480 AIG samples, 392 Duke samples, 294 Ella
+samples, and 80 tumor samples covering 2, 4, 6, and 10 mm tumors. See
+`data/README.md` for the selection policy.
 
 ## Installation
 
@@ -212,7 +216,7 @@ Train REC-NN1:
 
 ```bash
 python -m recnn.train \
-  --data data/samples/duke_sample.npy data/samples/ella_sample.npy \
+  --data data/DHH/Duke data/DHH/Ella \
   --mode rec \
   --architecture recnn1
 ```
@@ -221,7 +225,7 @@ Train REC-NN2:
 
 ```bash
 python -m recnn.train \
-  --data data/samples/duke_sample.npy data/samples/ella_sample.npy \
+  --data data/DHH/Duke data/DHH/Ella \
   --mode rec \
   --architecture recnn2
 ```
@@ -230,22 +234,22 @@ Train the direct-estimation baseline:
 
 ```bash
 python -m recnn.train \
-  --data data/samples/aig_sample.npy \
+  --data data/AIG \
   --mode epe \
   --architecture recnn1
 ```
 
 Use `--epochs`, `--batch-size`, `--learning-rate`, and `--output-dir` to
-configure a run. Multiple compatible arrays may be supplied after `--data`.
-The defaults follow the recovered paper-era scripts: 2500 epochs, batch size
-256, Adam with learning rate `1e-4` and betas `(0.5, 0.999)`, and a StepLR
-decay of 0.2 every 1000 epochs.
+configure a run. `--data` accepts files, directories, or multiple directories.
+Directories are searched recursively. The defaults follow the recovered
+paper-era scripts: 2500 epochs, batch size 256, Adam with learning rate `1e-4`
+and betas `(0.5, 0.999)`, and a StepLR decay of 0.2 every 1000 epochs.
 
 ## Evaluation
 
 ```bash
 python -m recnn.evaluate \
-  --data data/samples/duke_sample.npy \
+  --data data/DHH/Duke \
   --checkpoint outputs/rec_recnn1/best.pt
 ```
 

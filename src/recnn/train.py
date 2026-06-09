@@ -12,7 +12,13 @@ from .model import build_model
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Train REC-NN or EPE-NN.")
-    parser.add_argument("--data", type=Path, nargs="+", required=True)
+    parser.add_argument(
+        "--data",
+        type=Path,
+        nargs="+",
+        required=True,
+        help="One or more paper-format .npy files or directories.",
+    )
     parser.add_argument("--mode", choices=["rec", "epe"], default="rec")
     parser.add_argument(
         "--architecture",

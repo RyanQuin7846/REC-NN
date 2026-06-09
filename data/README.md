@@ -1,19 +1,40 @@
 # Data
 
-`samples/` contains four compact paper-format arrays selected from the newly
-recovered `REC-NN v2/data` directory:
+The repository contains a compact supervised-learning subset selected from the
+newly recovered `REC-NN v2/data` files:
 
-- `aig_sample.npy`: artificial irregular geometry sample.
-- `duke_sample.npy`: Duke digital human head sample.
-- `ella_sample.npy`: Ella digital human head sample.
-- `tumor_4mm_sample.npy`: Ella sample with an artificial 4 mm tumor.
+```text
+data/
+|-- AIG/
+|   `-- aig_subset.npy
+`-- DHH/
+    |-- Duke/
+    |   `-- duke.npy
+    |-- Ella/
+    |   `-- ella.npy
+    `-- Tumor/
+        |-- 2_mm.npy
+        |-- 4_mm.npy
+        |-- 6_mm.npy
+        `-- 10_mm.npy
+```
 
-Each file has shape `(1, 7, 32, 32)` and uses float32 values. The channels are:
+| Dataset | Samples | Selection |
+| --- | ---: | --- |
+| AIG | 480 | 16 evenly spaced finite cases from each of 30 geometries |
+| DHH/Duke | 392 | All recovered paper-format samples |
+| DHH/Ella | 294 | All recovered paper-format samples |
+| DHH/Tumor | 80 | All 2, 4, 6, and 10 mm samples |
+
+Every file has shape `(N, 7, 32, 32)`, uses float32 values, and follows:
 
 ```text
 phase, gradient_x, gradient_y, laplacian, sigma_stab,
 sigma_gt - sigma_stab, sigma_gt
 ```
 
-These files are for format inspection and smoke testing. They are not the
-complete datasets used to produce the paper results.
+The loader accepts either `.npy` files or directories. Directories are searched
+recursively, so `--data data/DHH` loads Duke, Ella, and Tumor files.
+
+This subset is sufficient for exercising supervised training and evaluation,
+but it is smaller than the complete AIG dataset used in the studies.
