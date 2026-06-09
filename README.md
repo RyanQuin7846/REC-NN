@@ -11,15 +11,16 @@ This repository is organized around two conference papers:
 
 ## Background
 
-MREPT estimates tissue electrical properties from MRI measurements. Analytical
-reconstruction methods are physically interpretable, but numerical
-differentiation is sensitive to noise and model assumptions can produce
-artifacts or reduce tissue contrast.
+Magnetic Resonance Electrical Property Tomography (MREPT) estimates tissue
+electrical properties from MRI measurements. Analytical reconstruction methods
+are physically interpretable, but numerical differentiation is sensitive to
+noise and model assumptions can produce artifacts or reduce tissue contrast.
 
-The papers propose REC-NN as a hybrid strategy: Stab-EPT first provides a
-physics-based conductivity reconstruction, and a neural network then predicts
-the remaining reconstruction error. This differs from an end-to-end electrical
-property estimation network (EPE-NN), which directly predicts conductivity.
+REC-NN is a **supervised learning method**. Stab-EPT first provides a
+physics-based conductivity reconstruction, and the neural network is trained
+with ground-truth conductivity labels to predict the remaining reconstruction
+error. This differs from an end-to-end electrical property estimation network
+(EPE-NN), which is supervised to predict conductivity directly.
 
 ## Method
 
@@ -42,6 +43,10 @@ The supervised objective described in the papers is
 ```text
 L_REC = MSE(Delta_sigma_hat, Delta_sigma)
 ```
+
+Each training sample therefore contains input features paired with a known
+ground-truth conductivity. For REC-NN, the supervised target is the true
+Stab-EPT residual; for EPE-NN, the supervised target is conductivity itself.
 
 The EPE-NN baseline uses the phase and derivative features without
 `sigma_stab`, and directly estimates `sigma_gt`.
@@ -221,6 +226,9 @@ pip install -e .
 ```
 
 ## Training
+
+Training is fully supervised and requires paper-format arrays containing both
+the input features and their corresponding ground-truth conductivity labels.
 
 Train REC-NN1:
 
