@@ -59,10 +59,20 @@ The EPE-NN baseline uses the phase and derivative features without
 
 ### Network variants
 
-- **REC-NN1 / EPE-NN1 (`recnn1`)**: 22 convolutional layers arranged as
-  eleven residual blocks without spatial downsampling.
-- **REC-NN2 / EPE-NN2 (`recnn2`)**: seven standard residual blocks plus two
-  downsampling and two upsampling residual blocks.
+- **REC-NN1 (`recnn1`)** uses only ResNet blocks and does not contain an
+  encoder-decoder structure.
+- **REC-NN2 (`recnn2`)** combines ResNet blocks with an encoder-decoder
+  structure that performs spatial downsampling and upsampling.
+
+The EPE baselines follow the same distinction: **EPE-NN1** uses the REC-NN1
+network structure without an encoder-decoder, while **EPE-NN2** uses the
+REC-NN2 structure with an encoder-decoder. Their difference from REC-NN is the
+learning target and input: EPE-NN directly estimates conductivity and does not
+receive the Stab-EPT conductivity input.
+
+This NN1/NN2 terminology is defined in the EMBC paper. The earlier URSI paper
+describes the encoder-decoder REC-NN and its corresponding EPE baseline without
+using the NN1/NN2 names.
 
 The paper-era source uses a LeakyReLU after the first convolution in each
 block, a linear residual addition, and normally distributed convolution
