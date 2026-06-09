@@ -46,7 +46,7 @@ L_REC = MSE(Delta_sigma_hat, Delta_sigma)
 The EPE-NN baseline uses the phase and derivative features without
 `sigma_stab`, and directly estimates `sigma_gt`.
 
-![REC-NN framework](docs/images/embc-recnn-framework.jpg)
+![REC-NN framework](docs/images/embc-recnn-framework-cropped.jpg)
 
 *REC-NN framework used for reconstruction error compensation in the EMBC 2023 study.*
 
@@ -78,7 +78,7 @@ human head data from Duke and Ella. The dataset contained 30 brain slices, with
 additional Ella test samples containing artificial tumors of 2, 4, 6, and
 10 mm.
 
-![Representative DHH samples](docs/images/embc-dhh-samples.jpg)
+![Representative DHH samples](docs/images/embc-dhh-samples-cropped.jpg)
 
 *Representative digital human head samples used in the EMBC experiments.*
 
@@ -97,15 +97,15 @@ estimation for unseen tumor samples, although tumor conductivity remained
 underestimated. Overcompensation and generalization to unseen electrical
 property distributions were identified as open problems.
 
-![Duke reconstruction results](docs/images/embc-duke-results.jpg)
+![Duke reconstruction results](docs/images/embc-duke-results-cropped.jpg)
 
 *Conductivity reconstruction comparison for the Duke model.*
 
-![Ella reconstruction results](docs/images/embc-ella-results.jpg)
+![Ella reconstruction results](docs/images/embc-ella-results-cropped.jpg)
 
 *Conductivity reconstruction comparison for the Ella model.*
 
-![Tumor reconstruction results](docs/images/embc-tumor-results.jpg)
+![Tumor reconstruction results](docs/images/embc-tumor-results-cropped.jpg)
 
 *Conductivity reconstruction comparison for the tumor-containing model.*
 
@@ -126,11 +126,11 @@ The resulting interpretation is that the Laplacian has a double-edged role:
 it is indispensable for boundary and shape information, but unprocessed
 outliers can negatively affect numerical compensation and generalization.
 
-![Laplacian threshold reconstruction results](docs/images/ursi-laplacian-threshold-results.jpg)
+![Laplacian threshold reconstruction results](docs/images/ursi-laplacian-threshold-results-cropped.jpg)
 
 *Reconstruction results under different Laplacian thresholding strategies in the URSI 2023 study.*
 
-![Laplacian profile and correlation analysis](docs/images/ursi-laplacian-profile-analysis.jpg)
+![Laplacian profile and correlation analysis](docs/images/ursi-laplacian-profile-analysis-cropped.jpg)
 
 *Line-profile and correlation analysis of the Laplacian preprocessing strategies.*
 
