@@ -59,10 +59,14 @@ The EPE-NN baseline uses the phase and derivative features without
 
 ### Network variants
 
-- **REC-NN1 / EPE-NN1 (`plain`)**: eleven residual blocks without spatial
-  downsampling.
-- **REC-NN2 / EPE-NN2 (`encoder`)**: residual blocks combined with an
-  encoder-decoder structure.
+- **REC-NN1 / EPE-NN1 (`recnn1`)**: 22 convolutional layers arranged as
+  eleven residual blocks without spatial downsampling.
+- **REC-NN2 / EPE-NN2 (`recnn2`)**: seven standard residual blocks plus two
+  downsampling and two upsampling residual blocks.
+
+The paper-era source uses a LeakyReLU after the first convolution in each
+block, a linear residual addition, and normally distributed convolution
+weights with standard deviation 0.02.
 
 The EMBC paper reports that the plain REC-NN1 obtained the best reconstruction
 on the tested Duke slice. The encoder-decoder structure improved estimates in
@@ -163,7 +167,7 @@ REC-NN/
 
 ## Data Format
 
-The recovered preprocessed arrays have shape `(N, C, H, W)`:
+Arrays have shape `(N, 7, H, W)` and use the paper-era channel layout:
 
 | Channel | Quantity |
 | --- | --- |
@@ -171,25 +175,33 @@ The recovered preprocessed arrays have shape `(N, C, H, W)`:
 | 1 | Phase gradient in x |
 | 2 | Phase gradient in y |
 | 3 | Phase Laplacian |
-| 4 | Reciprocal Stab-EPT conductivity (`gamma_stab`) |
+| 4 | Stab-EPT conductivity |
 | 5 | Conductivity residual (`sigma_gt - sigma_stab`) |
-| 6 | Stab-EPT conductivity |
-| 7 | Ground-truth conductivity |
-| 8-10 | Ground-truth derivative terms used by later analyses |
+| 6 | Ground-truth conductivity |
 
-REC-NN uses channels `0:5`; EPE-NN uses channels `0:4`. The included files are
-small examples recovered from the historical workspace. They are provided for
-format inspection and code validation, not as the complete AIG, Duke, Ella, or
-tumor datasets used to produce the published results.
+REC-NN receives channels 0-4. EPE-NN receives channels 0-3 and directly learns
+channel 6.
+
+The included AIG, Duke, Ella, and 4 mm tumor arrays each contain one float32
+sample selected from the newly recovered `REC-NN v2/data` files. They are
+provided for format inspection and code validation, not as the complete
+datasets used to produce the published results.
 
 ## Installation
 
-The original studies used Python 3.9.12, PyTorch 1.12.1, and CUDA 11.3.
-The cleaned implementation also supports newer compatible PyTorch releases.
+The papers report the following software environment:
+
+```text
+Python 3.9.12
+PyTorch 1.12.1
+CUDA 11.3
+```
+
+A matching Conda environment can be created with:
 
 ```bash
-python -m venv .venv
-.venv\Scripts\activate
+conda create -n recnn-paper python=3.9.12
+conda activate recnn-paper
 pip install -r requirements.txt
 pip install -e .
 ```
@@ -200,53 +212,57 @@ Train REC-NN1:
 
 ```bash
 python -m recnn.train \
-  --data data/samples/AIG_0.01.npy \
+  --data data/samples/duke_sample.npy data/samples/ella_sample.npy \
   --mode rec \
-  --architecture plain
+  --architecture recnn1
 ```
 
 Train REC-NN2:
 
 ```bash
 python -m recnn.train \
-  --data data/samples/AIG_0.01.npy \
+  --data data/samples/duke_sample.npy data/samples/ella_sample.npy \
   --mode rec \
-  --architecture encoder
+  --architecture recnn2
 ```
 
 Train the direct-estimation baseline:
 
 ```bash
 python -m recnn.train \
-  --data data/samples/AIG_0.01.npy \
+  --data data/samples/aig_sample.npy \
   --mode epe \
-  --architecture plain
+  --architecture recnn1
 ```
 
 Use `--epochs`, `--batch-size`, `--learning-rate`, and `--output-dir` to
-configure a run.
+configure a run. Multiple compatible arrays may be supplied after `--data`.
+The defaults follow the recovered paper-era scripts: 2500 epochs, batch size
+256, Adam with learning rate `1e-4` and betas `(0.5, 0.999)`, and a StepLR
+decay of 0.2 every 1000 epochs.
 
 ## Evaluation
 
 ```bash
 python -m recnn.evaluate \
-  --data data/samples/circular.npy \
-  --checkpoint outputs/rec_plain/best.pt
+  --data data/samples/duke_sample.npy \
+  --checkpoint outputs/rec_recnn1/best.pt
 ```
 
-The evaluation command reports NRMSE and PSNR.
+The evaluation command reports NRMSE and SSIM, matching the paper metrics.
 
 ## Reproducibility Scope
 
 This repository is a cleaned, paper-aligned reconstruction of the historical
-REC-NN code. It preserves the residual-compensation formulation, EPE baseline,
-input channels, and two network families described in the papers.
+REC-NN code. The core implementation is based on the newly recovered
+`REC-NN v2/network.py`, `network2.py`, and `main.py`. It preserves their
+residual-compensation formulation, LeakyReLU residual blocks, initialization,
+optimizer schedule, 7-channel data layout, and two network families.
 
 It does not currently include the complete proprietary/simulation datasets,
 original trained weights, or every preprocessing setting required to reproduce
-the exact tables and figures in the publications. Later PINN experiments and
-unrelated exploratory scripts were intentionally excluded. See
-`legacy/README.md` for the historical source map.
+the exact tables and figures in the publications. See `legacy/README.md` for
+the historical source map.
 
 ## Citation
 

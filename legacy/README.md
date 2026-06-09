@@ -1,23 +1,22 @@
 # Historical source map
 
-The following files in the parent workspace were identified as directly
-related to REC-NN:
+The public implementation was re-audited after additional historical files
+were recovered. The closest paper-era sources are:
 
-- `test/network.py`: later plain residual network.
-- `test/network2.py`: encoder-decoder residual network.
-- `test/main_REC.py`: later REC-NN experiment with physics-based losses.
-- `test/main_EPE.py`: later direct-estimation experiment.
-- `test/dataset maker.py`: channel construction and Stab-EPT residual labels.
-- `test/loader_gen.py`: simulation-data loader.
-- `test/data/*.npy`: compact preprocessed experiments and raw simulation data.
+- `REC-NN v2/network.py`: REC-NN1 residual blocks and channel widths.
+- `REC-NN v2/network2.py`: REC-NN2 downsampling/upsampling residual blocks.
+- `REC-NN v2/main.py`: supervised MSE training, Adam settings, weight
+  initialization, StepLR schedule, and AIG-to-DHH experiment variants.
+- `REC-NN v2/test.py`: REC/EPE inference variants and Laplacian ablations.
+- `REC-NN v2/data/`: original 7-channel AIG, Duke, Ella, and tumor arrays.
 
-The GitHub implementation in `src/recnn` keeps the paper's supervised MSE
-formulation and removes machine-specific paths, import-time training, repeated
-copies, per-epoch images, and full-model pickle checkpoints.
+The paper-era 7-channel layout is:
 
-The following were not included in the core implementation:
+```text
+phase, gradient_x, gradient_y, laplacian, sigma_stab,
+sigma_gt - sigma_stab, sigma_gt
+```
 
-- `20250122/pytorch_ML_stab_MREPT*.py`: earlier ML-Stab-MREPT experiments.
-- `PINN/`, `MREPT_Chiba_revised_202404/`, and most dated scripts in `test/`:
-  later physics-informed or exploratory work.
-- `__pycache__/`, generated figures, Excel logs, and `.pth` checkpoints.
+Machine-specific paths, import-time training, generated figures, full-model
+pickle checkpoints, and duplicate exploratory scripts are intentionally
+excluded from the GitHub implementation.

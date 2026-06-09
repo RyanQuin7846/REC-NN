@@ -6,6 +6,7 @@ venv/
 .idea/
 .vscode/
 outputs/
+.smoke_outputs/
 checkpoints/
 *.pt
 *.pth

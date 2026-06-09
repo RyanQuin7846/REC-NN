@@ -7,19 +7,13 @@ name = "rec-nn-mrept"
 version = "0.1.0"
 description = "Reconstruction Error Compensation Neural Network for MREPT"
 readme = "README.md"
-requires-python = ">=3.9"
+requires-python = ">=3.9,<3.10"
 license = {text = "MIT"}
 dependencies = [
-    "numpy>=1.23",
-    "torch>=1.12",
+    "numpy==1.24.3",
+    "scikit-image==0.21.0",
+    "torch==1.12.1",
 ]
-
-[project.optional-dependencies]
-test = ["pytest>=7"]
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.pytest.ini_options]
-pythonpath = ["src"]
-testpaths = ["tests"]

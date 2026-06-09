@@ -1,16 +1,19 @@
 # Data
 
-`samples/` contains compact preprocessed arrays recovered from the historical
-REC-NN workspace:
+`samples/` contains four compact paper-format arrays selected from the newly
+recovered `REC-NN v2/data` directory:
 
-- `AIG_0.01.npy`: artificial irregular geometry example.
-- `circular.npy`: circular phantom example.
-- `tumor_4mm.npy`: 4 mm tumor examples.
+- `aig_sample.npy`: artificial irregular geometry sample.
+- `duke_sample.npy`: Duke digital human head sample.
+- `ella_sample.npy`: Ella digital human head sample.
+- `tumor_4mm_sample.npy`: Ella sample with an artificial 4 mm tumor.
 
-Each array uses the channel convention documented in the project README.
-These files are suitable for smoke tests and format inspection, but they are
-not the complete AIG, DHH, Ella, or tumor datasets used in the papers.
+Each file has shape `(1, 7, 32, 32)` and uses float32 values. The channels are:
 
-Before publishing the repository, confirm that you have permission to
-redistribute each dataset. Put non-public full datasets under `data/private/`
-or `data/full/`; both paths are ignored by Git.
+```text
+phase, gradient_x, gradient_y, laplacian, sigma_stab,
+sigma_gt - sigma_stab, sigma_gt
+```
+
+These files are for format inspection and smoke testing. They are not the
+complete datasets used to produce the paper results.
