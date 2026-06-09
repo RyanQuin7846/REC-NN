@@ -1,0 +1,32 @@
+cff-version: 1.2.0
+message: "If you use this code, please cite the REC-NN conference papers."
+title: "REC-NN: Reconstruction Error Compensation Neural Network for MREPT"
+type: software
+version: 0.1.0
+date-released: 2026-06-09
+authors:
+  - family-names: Qin
+    given-names: Ruian
+  - family-names: Garcia Inda
+    given-names: Adan Jafet
+  - family-names: Zhou
+    given-names: Zhongchao
+  - family-names: Enomoto
+    given-names: Yukihiro
+  - family-names: Yang
+    given-names: Tianyi
+  - family-names: Imamoglu
+    given-names: Nevrez
+  - family-names: Gomez-Tames
+    given-names: Jose
+  - family-names: Huang
+    given-names: Shaoying
+  - family-names: Yu
+    given-names: Wenwei
+references:
+  - type: conference-paper
+    title: "REC-NN: A reconstruction error compensation neural network for Magnetic Resonance Electrical Property Tomography (MREPT)"
+    year: 2023
+  - type: conference-paper
+    title: "Is Laplacian indispensable to Magnetic Resonance Electrical Property Tomography (MREPT)? An analysis from the perspective of Reconstruction Error Compensation Neural Networks"
+    year: 2023
